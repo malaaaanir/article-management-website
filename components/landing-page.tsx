@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useArticles } from "@/contexts/article-context"
 import { useDebounce } from "@/hooks/use-debounce"
+import SearchBox from '@/components/SearchBox'
 
 export default function LandingPage() {
   const { articles, categories, loading, fetchArticles, fetchCategories, totalArticles } = useArticles()
@@ -20,6 +21,7 @@ export default function LandingPage() {
 
   const articlesPerPage = 9
 
+  
   useEffect(() => {
     fetchArticles({ limit: 100 }) // Fetch more articles for landing page
     fetchCategories({ limit: 100 }) // Fetch all categories
@@ -43,7 +45,7 @@ export default function LandingPage() {
     const startIndex = (currentPage - 1) * articlesPerPage
     return filteredArticles.slice(startIndex, startIndex + articlesPerPage)
   }, [filteredArticles, currentPage])
-
+  
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage)
 
   return (
@@ -77,9 +79,9 @@ export default function LandingPage() {
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4">
-            <span className="text-sm opacity-90">Blog portal</span>
+            <span className="text-sm opacity-90">Blog genzet</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-normal mb-4">
             The Journal: Design Resources,
             <br />
             Interviews, and Industry News
@@ -88,11 +90,11 @@ export default function LandingPage() {
 
           <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="bg-white text-black">
+              <SelectTrigger className="bg-white text-black w-full md:w-auto rounded-lg shadow-sm hover:shadow-md transition-shadow border-gray-200">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+              <SelectContent className="rounded-lg shadow-lg border-gray-200">
+                <SelectItem value="all">Select category</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.name}>
                     {category.name}
@@ -100,14 +102,17 @@ export default function LandingPage() {
                 ))}
               </SelectContent>
             </Select>
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white text-black"
-              />
+
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  placeholder="Search articles"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-white text-black rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -209,8 +214,8 @@ export default function LandingPage() {
               <span className="text-blue-600 font-bold text-sm">L</span>
             </div>
             <span className="font-semibold text-lg">Logoipsum</span>
-          </div>
           <p className="text-sm opacity-75">© 2025 Blog portal. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
