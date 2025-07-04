@@ -51,6 +51,7 @@ export interface Article {
   id: string
   title: string
   content: string
+  imageUrl: string
   userId: string
   categoryId: string
   createdAt: string

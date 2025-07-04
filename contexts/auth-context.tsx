@@ -49,12 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string) => {
     try {
       const res = await authAPI.login(username, password)
-
-      // backend returns only { token, role }
       const token = res.token
+
       if (!token) return { success: false, error: "Token missing from server response" }
 
-      // save token so the next call has the auth header
       localStorage.setItem("token", token)
 
       // try to get full profile
@@ -79,10 +77,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const res = await authAPI.register(username, password, role)
 
-      const token = res.token
-      if (!token) return { success: false, error: "Token missing from server response" }
+      // const token = res.token
+      // if (!token) return { success: false, error: "Token missing from server response" }
 
-      localStorage.setItem("token", token)
+      // localStorage.setItem("token", token)
 
       let profile: User | null = null
       try {

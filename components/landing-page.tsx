@@ -140,7 +140,8 @@ export default function LandingPage() {
               {paginatedArticles.map((article) => (
                 <Card key={article.id} className="hover:shadow-lg transition-shadow">
                   <div className="aspect-video bg-gradient-to-br from-blue-100 to-blue-200 rounded-t-lg flex items-center justify-center">
-                    <span className="text-blue-600 font-semibold">Article Image</span>
+                    {/* <span className="text-blue-600 font-semibold">Article Image</span> */}
+                    <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover"/>
                   </div>
                   <CardContent className="p-4">
                     <div className="text-sm text-gray-500 mb-2">

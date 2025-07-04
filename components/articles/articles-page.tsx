@@ -230,7 +230,7 @@ export default function ArticlesPage() {
                         <TableRow key={article.id}>
                           <TableCell>
                             <div className="w-16 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded flex items-center justify-center">
-                              <span className="text-blue-600 text-xs">IMG</span>
+                              <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover"/>
                             </div>
                           </TableCell>
                           <TableCell className="font-medium max-w-xs">
