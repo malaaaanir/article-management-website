@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { authAPI, type User } from "@/lib/api"
+import axios from "axios";
 
 interface AuthContextType {
   user: User | null
@@ -73,30 +74,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // const register = async (username: string, password: string, role: "User" | "Admin") => {
+  //   try {
+  //     const res = await authAPI.register(username, password, role)
+
+  //     const loginRes = await authAPI.login(username, password);
+  //     const token = loginRes.token;
+
+  //     if (!token) {
+  //       return { success: false, error: "Token missing from server response" };
+  //     }
+
+  //     let profile: User | null = null
+  //     try {
+  //       profile = await authAPI.getProfile()
+  //     } catch {
+  //       profile = { id: "", username, role }
+  //     }
+
+  //     setUser(profile)
+  //     localStorage.setItem("user", JSON.stringify(profile))
+  //     return { success: true }
+  //   } catch (err: any) {
+  //     const msg = err.response?.data?.message || err.message || "Registration failed"
+  //     return { success: false, error: msg }
+  //   }
+  // }
   const register = async (username: string, password: string, role: "User" | "Admin") => {
-    try {
-      const res = await authAPI.register(username, password, role)
+  try {
+    // 1. Registrasi user baru
+    await authAPI.register(username, password, role);
+    
+    // 2. Auto-login setelah registrasi berhasil
+    const loginRes = await authAPI.login(username, password);
+    const token = loginRes.token;
 
-      // const token = res.token
-      // if (!token) return { success: false, error: "Token missing from server response" }
-
-      // localStorage.setItem("token", token)
-
-      let profile: User | null = null
-      try {
-        profile = await authAPI.getProfile()
-      } catch {
-        profile = { id: "", username, role }
-      }
-
-      setUser(profile)
-      localStorage.setItem("user", JSON.stringify(profile))
-      return { success: true }
-    } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || "Registration failed"
-      return { success: false, error: msg }
+    if (!token) {
+      return { success: false, error: "Token missing from server response" };
     }
+
+    // 3. Simpan token dan profile
+    localStorage.setItem("token", token);
+    
+    const profile = { 
+      id: "", 
+      username, 
+      role 
+    };
+    
+    setUser(profile);
+    localStorage.setItem("user", JSON.stringify(profile));
+
+    // 4. Redirect berdasarkan role
+    if (role === "Admin") {
+      router.push("/admin/articles");
+    } else {
+      router.push("/articles");
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    const msg = err.response?.data?.message || err.message || "Registration failed";
+    return { success: false, error: msg };
   }
+};
 
   const logout = () => {
     setUser(null)
